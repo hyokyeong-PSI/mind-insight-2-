@@ -35,9 +35,9 @@ const Diagnosis: React.FC<DiagnosisProps> = ({ onComplete }) => {
     setIsAnalyzing(true);
     try {
       const domainScores: Record<string, number> = {
-        [Domain.Negative Sensitivity]: 0,
+        [Domain.NegativeSensitivity]: 0,
         [Domain.Extraversion]: 0,
-        [Domain.Openness to Experience]: 0,
+        [Domain.OpennessToExperience]: 0,
         [Domain.Agreeableness]: 0,
         [Domain.Conscientiousness]: 0,
       };
