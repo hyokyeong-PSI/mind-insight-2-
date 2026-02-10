@@ -8,9 +8,9 @@ export const generateInterpretation = async (scores: Record<Domain, number>): Pr
   const prompt = `
     당신은 심리학 전문가이며 NEO-PI-3 (Five Factor Model) 기반 성격 진단 해석 전문가입니다.
     다음은 사용자의 각 요인별 점수(최소 6점 ~ 최대 30점, 요인당 6문항)입니다:
-    - 심리적 민감성: ${scores[Domain.Negative Sensitivity]}
+    - 심리적 민감성: ${scores[Domain.NegativeSensitivity]}
     - 내향/외향성: ${scores[Domain.Extraversion]}
-    - 인지적 개방성: ${scores[Domain.Openness to Experience]}
+    - 인지적 개방성: ${scores[Domain.OpennessToExperience]}
     - 대인 수용성: ${scores[Domain.Agreeableness]}
     - 규범지향성: ${scores[Domain.Conscientiousness]}
 
