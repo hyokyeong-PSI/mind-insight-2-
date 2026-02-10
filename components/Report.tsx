@@ -14,11 +14,11 @@ const Report: React.FC<ReportProps> = ({ result }) => {
   const [isExporting, setIsExporting] = useState(false);
 
   const chartData = [
-    { subject: '심리적 민감성', A: result.scores[Domain.Negative Sensitivity], fullMark: 60 },
-    { subject: '내향/외향성', A: result.scores[Domain.Extraversion], fullMark: 60 },
-    { subject: '인지적 개방성', A: result.scores[Domain.Openness to Experience], fullMark: 60 },
-    { subject: '대인 수용성', A: result.scores[Domain.Agreeableness], fullMark: 60 },
-    { subject: '규범지향성', A: result.scores[Domain.Conscientiousness], fullMark: 60 },
+    { subject: '심리적 민감성', A: result.scores[Domain.Negative Sensitivity], fullMark: 30 },
+    { subject: '내향/외향성', A: result.scores[Domain.Extraversion], fullMark: 30 },
+    { subject: '인지적 개방성', A: result.scores[Domain.Openness to Experience], fullMark: 30 },
+    { subject: '대인 수용성', A: result.scores[Domain.Agreeableness], fullMark: 30 },
+    { subject: '규범지향성', A: result.scores[Domain.Conscientiousness], fullMark: 30 },
   ];
 
   const renderCustomTick = (props: any) => {
@@ -106,7 +106,7 @@ const Report: React.FC<ReportProps> = ({ result }) => {
         <div ref={reportRef} className="pdf-content space-y-16 p-8 rounded-[3rem]">
           <div className="text-center space-y-4">
             <h2 className="text-4xl font-bold text-[#292524]">성격 분석 리포트</h2>
-            <p className="text-[#78716c] font-light">당신의 내면을 비추는 60가지 질문의 결과입니다.</p>
+            <p className="text-[#78716c] font-light">당신의 내면을 비추는 30가지 질문의 결과입니다.</p>
           </div>
 
           {/* 요인별 점수 및 차트 */}
