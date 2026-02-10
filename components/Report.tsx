@@ -116,7 +116,7 @@ const Report: React.FC<ReportProps> = ({ result }) => {
                 <RadarChart data={chartData}>
                   <PolarGrid stroke="#e7e5e4" />
                   <PolarAngleAxis dataKey="subject" tick={renderCustomTick} />
-                  <PolarRadiusAxis domain={[0, 60]} tick={false} axisLine={false} />
+                  <PolarRadiusAxis domain={[0, 30]} tick={false} axisLine={false} />
                   <Radar dataKey="A" stroke="#84a98c" fill="#84a98c" fillOpacity={0.4} />
                 </RadarChart>
               </ResponsiveContainer>
@@ -126,10 +126,10 @@ const Report: React.FC<ReportProps> = ({ result }) => {
                 <div key={item.subject} className="space-y-1">
                   <div className="flex justify-between text-xs font-bold">
                     <span>{item.subject}</span>
-                    <span>{item.A} / 60</span>
+                    <span>{item.A} / 30</span>
                   </div>
                   <div className="h-2 w-full bg-stone-100 rounded-full overflow-hidden">
-                    <div className="h-full bg-[#84a98c]" style={{ width: `${(item.A/60)*100}%` }}></div>
+                    <div className="h-full bg-[#84a98c]" style={{ width: `${(item.A/30)*100}%` }}></div>
                   </div>
                 </div>
               ))}
