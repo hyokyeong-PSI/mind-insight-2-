@@ -1,8 +1,8 @@
 
 export enum Domain {
-  Neuroticism = '심리적 민감성',
+  Negative Sensitivity = '심리적 민감성',
   Extraversion = '내향/외향성',
-  Openness = '인지적 개방성',
+  Openness to Experience = '인지적 개방성',
   Agreeableness = '대인 수용성',
   Conscientiousness = '규범지향성'
 }
