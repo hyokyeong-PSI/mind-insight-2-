@@ -14,9 +14,9 @@ const Report: React.FC<ReportProps> = ({ result }) => {
   const [isExporting, setIsExporting] = useState(false);
 
   const chartData = [
-    { subject: '심리적 민감성', A: result.scores[Domain.Negative Sensitivity], fullMark: 30 },
+    { subject: '심리적 민감성', A: result.scores[Domain.NegativeSensitivity], fullMark: 30 },
     { subject: '내향/외향성', A: result.scores[Domain.Extraversion], fullMark: 30 },
-    { subject: '인지적 개방성', A: result.scores[Domain.Openness to Experience], fullMark: 30 },
+    { subject: '인지적 개방성', A: result.scores[Domain.OpennessToExperience], fullMark: 30 },
     { subject: '대인 수용성', A: result.scores[Domain.Agreeableness], fullMark: 30 },
     { subject: '규범지향성', A: result.scores[Domain.Conscientiousness], fullMark: 30 },
   ];
