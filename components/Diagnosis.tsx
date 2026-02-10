@@ -35,9 +35,9 @@ const Diagnosis: React.FC<DiagnosisProps> = ({ onComplete }) => {
     setIsAnalyzing(true);
     try {
       const domainScores: Record<string, number> = {
-        [Domain.Neuroticism]: 0,
+        [Domain.Negative Sensitivity]: 0,
         [Domain.Extraversion]: 0,
-        [Domain.Openness]: 0,
+        [Domain.Openness to Experience]: 0,
         [Domain.Agreeableness]: 0,
         [Domain.Conscientiousness]: 0,
       };
@@ -108,7 +108,7 @@ const Diagnosis: React.FC<DiagnosisProps> = ({ onComplete }) => {
 
           <div className="grid grid-cols-1 gap-3">
             {[
-              { label: '매우 그렇지 않다', value: 1 },
+              { label: '전혀 그렇지 않다', value: 1 },
               { label: '그렇지 않다', value: 2 },
               { label: '보통이다', value: 3 },
               { label: '그렇다', value: 4 },
