@@ -39,7 +39,7 @@ const Intro: React.FC<IntroProps> = ({ onStartDiagnosis }) => {
 
       <section className="grid md:grid-cols-2 gap-16 items-center">
         <div className="space-y-6">
-          <h2 className="text-3xl font-bold text-[#292524]">신뢰할 수 있는 <br/>마음 지표, NEO-PI-3</h2>
+          <h2 className="text-3xl font-bold text-[#292524]">신뢰할 수 있는 <br/>마음 지표, Big5</h2>
           <p className="text-[#78716c] leading-relaxed font-light text-lg">
             성격 심리학의 글로벌 표준인 Big Five 모델을 기반으로 합니다. 
             단순한 성향 파악을 넘어, 강점과 보완점을 정밀하게 분석하여 당신의 성장을 돕습니다.
@@ -60,9 +60,9 @@ const Intro: React.FC<IntroProps> = ({ onStartDiagnosis }) => {
         <div className="bg-white p-10 rounded-[2.5rem] shadow-sm border border-[#f5f5f4]">
           <div className="grid grid-cols-1 gap-5">
             {[
-              { title: '심리적 민감성', desc: '감정 조절과 회복 탄력성' },
-              { title: '내향/외향성', desc: '세상과 소통하는 방식' },
-              { title: '인지적 개방성', desc: '새로운 생각에 대한 포용' },
+              { title: '심리적 민감성', desc: '부정적 감정 조절과 회복 탄력성' },
+              { title: '내향/외향성', desc: '상호작용 및 사회적 적응 방식' },
+              { title: '인지적 개방성', desc: '새로운 생각과 경험에 대한 포용' },
               { title: '대인 수용성', desc: '함께 살아가는 따뜻함' },
               { title: '규범지향성', desc: '나를 다스리는 힘' },
             ].map((item) => (
