@@ -2,13 +2,13 @@
 import { Domain, Question } from './types';
 
 export const NEO_QUESTIONS: Question[] = [
-  // 심리적 민감성 (Neuroticism) - 6문항
-  { id: 1, text: "나는 일이 잘못되지 않을까 걱정할 때가 있다.", domain: Domain.Neuroticism, reverse: false },
-  { id: 2, text: "사람들은 내가 화를 쉽게 내고 성질이 급하다고 한다.", domain: Domain.Neuroticism, reverse: false },
-  { id: 3, text: "나는 스트레스 상황에서 의기소침해진다.", domain: Domain.Neuroticism, reverse: false },
-  { id: 4, text: "사람들에게 둘러싸여 있을 때, 바보스럽게 보일까봐 걱정이 된다.", domain: Domain.Neuroticism, reverse: false },
-  { id: 5, text: "나는 일이 잘못되었을 때 자책하는 경향이 있다.", domain: Domain.Neuroticism, reverse: false },
-  { id: 6, text: "나는 충동적으로 어떤 일을 하고 나중에 후회하곤 한다.", domain: Domain.Neuroticism, reverse: false },
+  // 심리적 민감성 (Negative Sensitivity) - 6문항
+  { id: 1, text: "나는 일이 잘못되지 않을까 걱정할 때가 있다.", domain: Domain.Negative Sensitivity, reverse: false },
+  { id: 2, text: "사람들은 내가 화를 쉽게 내고 성질이 급하다고 한다.", domain: Domain.Negative Sensitivity, reverse: false },
+  { id: 3, text: "나는 스트레스 상황에서 의기소침해진다.", domain: Domain.Negative Sensitivity, reverse: false },
+  { id: 4, text: "사람들에게 둘러싸여 있을 때, 바보스럽게 보일까봐 걱정이 된다.", domain: Domain.Negative Sensitivity, reverse: false },
+  { id: 5, text: "나는 일이 잘못되었을 때 자책하는 경향이 있다.", domain: Domain.Negative Sensitivity, reverse: false },
+  { id: 6, text: "나는 충동적으로 어떤 일을 하고 나중에 후회하곤 한다.", domain: Domain.Negative Sensitivity, reverse: false },
   
   // 내향/외향성 (Extraversion) - 6문항
   { id: 7, text: "나는 명랑하고 활력이 넘치는 사람이다.", domain: Domain.Extraversion, reverse: false },
@@ -18,13 +18,13 @@ export const NEO_QUESTIONS: Question[] = [
   { id: 11, text: "반대가 있더라도 주장할 것은 주장한다.", domain: Domain.Extraversion, reverse: false },
   { id: 12, text: "나는 늘 부지런하고 바쁘게 지낸다.", domain: Domain.Extraversion, reverse: false },
 
-  // 인지적 개방성 (Openness) - 6문항
-  { id: 13, text: "우리가 가지고 있는 옳고 그름에 대한 기준이 세상의 모든 사람들에게 똑같이 적용되지 않는다.", domain: Domain.Openness, reverse: false },
-  { id: 14, text: "무엇이든 그것에 대한 나의 느낌과 감정을 중요하게 생각한다. ", domain: Domain.Openness, reverse: false },
-  { id: 15, text: "나는 복잡하게 얽힌 퀴즈를 푸는 것을 즐긴다.", domain: Domain.Openness, reverse: false },
-  { id: 16, text: "나는 상상의 나래를 한껏 펼쳐 나가는 것을 좋아한다.", domain: Domain.Openness, reverse: true },
-  { id: 17, text: "나는 자연이나 예술작품에 흥미가 있다. ", domain: Domain.Openness, reverse: false },
-  { id: 18, text: "나는 새로운 취미를 배우고 개발하는 데 흥미가 있다.", domain: Domain.Openness, reverse: false },
+  // 인지적 개방성 (Openness to Experience) - 6문항
+  { id: 13, text: "우리가 가지고 있는 옳고 그름에 대한 기준이 세상의 모든 사람들에게 똑같이 적용되지 않는다.", domain: Domain.Openness to Experience, reverse: false },
+  { id: 14, text: "무엇이든 그것에 대한 나의 느낌과 감정을 중요하게 생각한다. ", domain: Domain.Openness to Experience, reverse: false },
+  { id: 15, text: "나는 복잡하게 얽힌 퀴즈를 푸는 것을 즐긴다.", domain: Domain.Openness to Experience, reverse: false },
+  { id: 16, text: "나는 상상의 나래를 한껏 펼쳐 나가는 것을 좋아한다.", domain: Domain.Openness to Experience, reverse: true },
+  { id: 17, text: "나는 자연이나 예술작품에 흥미가 있다. ", domain: Domain.Openness to Experience, reverse: false },
+  { id: 18, text: "나는 새로운 취미를 배우고 개발하는 데 흥미가 있다.", domain: Domain.Openness to Experience, reverse: false },
 
   // 대인 수용성 (Agreeableness) - 6문항
   { id: 19, text: "내 자신이나 나의 성취에 대해 자랑 삼아 이야기 하지 않는다.", domain: Domain.Agreeableness, reverse: false },
