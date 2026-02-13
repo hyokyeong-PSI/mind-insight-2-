@@ -182,7 +182,8 @@ const Report: React.FC<ReportProps> = ({ result }) => {
           <div className="space-y-12">
             <div className="text-center space-y-4" style={avoidBreakStyle}>
               <h2 className="text-4xl font-bold text-[#292524]">성격 분석 리포트</h2>
-              <p className="text-[#78716c] font-light">당신의 내면을 비추는 30가지 질문의 결과입니다.</p>
+              <p className="text-[#78716c] font-light">당신의 내면을 비추는 30가지 질문의 결과입니다.</br> 단, 본 결과는 Big5 진단의 256개 중 일부문항에 대한 응답결과로 실제 결과와 일치하지 않을 수 있습니다.</br>
+              보다 타당하고 신뢰로운 결과를 제공받기 위해서는 PSI COMPASS 홈페이지를 통해 진단을 문의해주세요.</p>
             </div>
 
             {/* 요인별 점수 및 차트 */}
