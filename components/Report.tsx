@@ -191,7 +191,8 @@ const a4PageStyle: React.CSSProperties = {
 
 <div className="mt-4 text-sm text-[#44403c] leading-relaxed max-w-2xl mx-auto bg-[#f5f5f4] border border-[#e7e5e4] rounded-xl px-4 py-3">
   단, 본 결과는 Big5 진단 문항 256개 중 일부 문항에 대한 응답을 기반으로 산출된 참고용 결과입니다. <br />
-  보다 타당하고 신뢰도 높은 정식 진단 결과를 원하실 경우, PSI COMPASS 홈페이지를 통해 전문 진단을 문의해주시기 바랍니다.
+  보다 타당하고 신뢰도 높은 정식 진단 결과를 원하실 경우, <br/>
+  PSI COMPASS 홈페이지를 통해 전문 진단을 문의해주시기 바랍니다.
 </div>
 
             </div>
