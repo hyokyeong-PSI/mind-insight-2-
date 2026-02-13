@@ -146,13 +146,15 @@ const Report: React.FC<ReportProps> = ({ result }) => {
   };
 
   // ✅ A4 페이지 컨테이너 공통(웹 화면에서도 예쁘고, 캡처에 안정적)
-  const a4PageStyle: React.CSSProperties = {
-    width: '210mm',
-    minHeight: '297mm',
-    padding: '18mm',
-    boxSizing: 'border-box',
-    background: '#ffffff',
-  };
+const a4PageStyle: React.CSSProperties = {
+  width: '210mm',
+  minHeight: '297mm',
+  padding: '18mm',
+  boxSizing: 'border-box',
+  background: '#ffffff',
+  overflow: 'visible', // ✅ 화면에서 잘림 방지
+};
+
 
   return (
     <div className="max-w-4xl mx-auto py-12 px-4 space-y-10 animate-fadeIn relative">
@@ -180,13 +182,18 @@ const Report: React.FC<ReportProps> = ({ result }) => {
            ========================= */}
         <div ref={page1Ref} className="mx-auto" style={a4PageStyle}>
           <div className="space-y-12">
-            <div className="text-center space-y-4" style={avoidBreakStyle}>
-              <h2 className="text-4xl font-bold text-[#292524]">성격 분석 리포트</h2>
-              <p className="text-[#78716c] font-light">당신의 내면을 비추는 30가지 질문의 결과입니다.</p>
-                <div className="mt-4 text-xs text-[#78716c] leading-relaxed max-w-2xl mx-auto bg-stone-50 border border-stone-200 rounded-xl px-4 py-3">
-    단, 본 결과는 Big5 진단 문항 256개 중 일부 문항에 대한 응답을 기반으로 산출된 참고용 결과입니다. <br />
-    보다 타당하고 신뢰도 높은 정식 진단 결과를 원하실 경우, PSI COMPASS 홈페이지를 통해 전문 진단을 문의해주시기 바랍니다.
-  </div>
+<div className="text-center space-y-4" style={avoidBreakStyle}>
+  <h2 className="text-4xl font-bold text-[#292524]">성격 분석 리포트</h2>
+  <p className="text-[#78716c] font-light">
+    당신의 내면을 비추는 30가지 질문의 결과입니다.
+  </p>
+</div>
+
+<div className="mt-4 text-sm text-[#44403c] leading-relaxed max-w-2xl mx-auto bg-[#f5f5f4] border border-[#e7e5e4] rounded-xl px-4 py-3">
+  단, 본 결과는 Big5 진단 문항 256개 중 일부 문항에 대한 응답을 기반으로 산출된 참고용 결과입니다. <br />
+  보다 타당하고 신뢰도 높은 정식 진단 결과를 원하실 경우, PSI COMPASS 홈페이지를 통해 전문 진단을 문의해주시기 바랍니다.
+</div>
+
             </div>
 
             {/* 요인별 점수 및 차트 */}
