@@ -61,7 +61,7 @@ const Intro: React.FC<IntroProps> = ({ onStartDiagnosis }) => {
           </div>
         </div>
         <div className="bg-white p-10 rounded-[2.5rem] shadow-sm border border-[#f5f5f4]">
-          <div className="grid grid-cols-1 gap-5">
+          <div className="space-y-5">
             {[
               { title: '심리적 민감성', desc: '부정적 감정 조절과 회복 탄력성' },
               { title: '내향/외향성', desc: '상호작용 및 사회적 적응 방식' },
@@ -69,10 +69,15 @@ const Intro: React.FC<IntroProps> = ({ onStartDiagnosis }) => {
               { title: '대인 수용성', desc: '함께 살아가는 따뜻함' },
               { title: '규범지향성', desc: '나를 다스리는 힘' },
             ].map((item) => (
-              <div key={item.title} className="flex items-center gap-4 group">
-                <div className="bg-[#f0f3f0] text-[#84a98c] px-3 py-1 rounded-full font-bold text-xs min-w-[90px] text-center">{item.title}</div>
-                <p className="text-[#78716c] text-sm font-light">{item.desc}</p>
-              </div>
+              <div key={item.title} className="grid grid-cols-[130px_1fr] items-center gap-6">
+  <div className="bg-[#f0f3f0] text-[#84a98c] px-3 py-1 rounded-full font-bold text-xs text-center">
+    {item.title}
+  </div>
+  <p className="text-[#78716c] text-sm font-normal leading-relaxed">
+    {item.desc}
+  </p>
+</div>
+
             ))}
           </div>
         </div>
