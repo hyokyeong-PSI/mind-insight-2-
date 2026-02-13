@@ -42,7 +42,7 @@ const Intro: React.FC<IntroProps> = ({ onStartDiagnosis }) => {
 
       <section className="grid md:grid-cols-2 gap-16 items-center">
         <div className="space-y-6">
-          <h2 className="text-3xl font-bold text-[#292524]">신뢰할 수 있는 <br/>마음 지표, Big5</h2>
+          <h2 className="text-3xl font-bold text-[#292524]">신뢰할 수 있는 마음 지표, <br/>Big5</h2>
           <p className="text-[#78716c] leading-relaxed font-light text-lg">
             성격 심리학의 글로벌 표준인 Big Five 모델을 기반으로 합니다. 
             단순한 성향 파악을 넘어, 강점과 보완점을 정밀하게 분석하여 당신의 성장을 돕습니다.
