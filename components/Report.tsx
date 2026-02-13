@@ -103,7 +103,17 @@ const Report: React.FC<ReportProps> = ({ result }) => {
 
       <div className="space-y-16">
         {/* PDF 캡처 영역 시작 */}
-        <div ref={reportRef} className="pdf-content space-y-16 p-8 rounded-[3rem]">
+<div
+  ref={reportRef}
+  className="pdf-content space-y-16 bg-[#fafaf9] mx-auto"
+  style={{
+    width: '210mm',          // A4 폭
+    minHeight: '297mm',      // A4 높이(최소)
+    padding: '18mm',         // 여백(원하는 값으로 조정)
+    boxSizing: 'border-box',
+  }}
+>
+
           <div className="text-center space-y-4">
             <h2 className="text-4xl font-bold text-[#292524]">성격 분석 리포트</h2>
             <p className="text-[#78716c] font-light">당신의 내면을 비추는 30가지 질문의 결과입니다.</p>
