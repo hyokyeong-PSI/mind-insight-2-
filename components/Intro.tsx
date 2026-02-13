@@ -12,10 +12,13 @@ const Intro: React.FC<IntroProps> = ({ onStartDiagnosis }) => {
         <div className="inline-block px-4 py-1.5 bg-[#f0f3f0] text-[#84a98c] rounded-full text-xs font-bold tracking-wider mb-2">
           GENTLE SELF-DISCOVERY
         </div>
-        <h1 className="text-4xl md:text-6xl font-bold text-[#292524] leading-tight tracking-tight">
-          잠시 멈춰, <br/><span className="text-[#84a98c]">나의 마음</span>과 마주하세요
+        <h1 className="text-4xl md:text-6xl font-bold text-[#292524] leading-[1.12] tracking-tight">
+          잠시 멈춰,
+          <span className="block mt-2">
+          <span className="text-[#84a98c]">나의 마음</span>과 마주하세요
+          </span>
         </h1>
-        <p className="text-lg md:text-xl text-[#78716c] max-w-2xl mx-auto leading-relaxed font-light">
+        <p className="text-lg md:text-xl text-[#78716c] max-w-2xl mx-auto leading-[1.6] font-normal">
           로그인 없이 바로 시작하는 정밀 성격 진단. <br/>
           과학적인 진단을 통해 평온한 일상을 위한 나만의 템포를 찾아보세요.
         </p>
