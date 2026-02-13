@@ -187,7 +187,7 @@ const Report: React.FC<ReportProps> = ({ result }) => {
 
             {/* 요인별 점수 및 차트 */}
             <div
-              className="bg-white p-10 rounded-[3.5rem] shadow-sm border border-[#f5f5f4] grid md:grid-cols-2 gap-12 items-center"
+              className="bg-white p-10 rounded-[3.5rem] shadow-sm border border-[#f5f5f4] grid grid-cols-[1.2fr_0.9fr] gap-12 items-center"
               style={avoidBreakStyle}
             >
               <div className="h-[380px] w-full min-w-0 overflow-visible flex items-center justify-center">
