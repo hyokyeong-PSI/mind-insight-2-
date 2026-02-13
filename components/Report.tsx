@@ -49,7 +49,7 @@ const Report: React.FC<ReportProps> = ({ result }) => {
       const element = reportRef.current;
       const canvas = await html2canvas(element, { 
         scale: 2, 
-        backgroundColor: '#fafaf9',
+        backgroundColor: '#ffffff',
         useCORS: true,
         logging: false
       });
@@ -65,6 +65,8 @@ const Report: React.FC<ReportProps> = ({ result }) => {
       let position = 0;
 
       // 첫 페이지 추가
+      pdf.setFillColor(255, 255, 255);
+pdf.rect(0, 0, 210, 297, 'F'); // A4 전체 흰색 채움
       pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
       heightLeft -= pageHeight;
 
@@ -72,6 +74,8 @@ const Report: React.FC<ReportProps> = ({ result }) => {
       while (heightLeft >= 0) {
         position = heightLeft - imgHeight;
         pdf.addPage();
+        pdf.setFillColor(255, 255, 255);
+pdf.rect(0, 0, 210, 297, 'F'); // A4 전체 흰색 채움
         pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
         heightLeft -= pageHeight;
       }
@@ -105,7 +109,7 @@ const Report: React.FC<ReportProps> = ({ result }) => {
         {/* PDF 캡처 영역 시작 */}
 <div
   ref={reportRef}
-  className="pdf-content space-y-16 bg-[#fafaf9] mx-auto"
+  className="pdf-content space-y-16 bg-white mx-auto"
   style={{
     width: '210mm',          // A4 폭
     minHeight: '297mm',      // A4 높이(최소)
