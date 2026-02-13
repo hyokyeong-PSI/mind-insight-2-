@@ -16,8 +16,10 @@ interface ReportProps {
 }
 
 const Report: React.FC<ReportProps> = ({ result }) => {
-  const page1Ref = useRef<HTMLDivElement>(null);
-  const page2Ref = useRef<HTMLDivElement>(null);
+  // ✅ PDF 전용 DOM ref (화면에는 숨김)
+  const pdfPage1Ref = useRef<HTMLDivElement>(null);
+  const pdfPage2Ref = useRef<HTMLDivElement>(null);
+
   const [isExporting, setIsExporting] = useState(false);
 
   const chartData = [
@@ -49,8 +51,15 @@ const Report: React.FC<ReportProps> = ({ result }) => {
     );
   };
 
+  // ✅ PDF 캡처 안정화 버전
   const capture = async (el: HTMLElement) => {
-    // 캡처 안정화: 스크롤/뷰포트 영향을 최소화
+    // 폰트/레이아웃 안정화
+    try {
+      // @ts-ignore
+      await document.fonts?.ready;
+    } catch (_) {}
+    await new Promise((r) => requestAnimationFrame(() => r(null)));
+
     return await html2canvas(el, {
       scale: 2,
       backgroundColor: '#ffffff',
@@ -58,20 +67,19 @@ const Report: React.FC<ReportProps> = ({ result }) => {
       logging: false,
       windowWidth: el.scrollWidth,
       windowHeight: el.scrollHeight,
-      scrollX: 0,
-      scrollY: -window.scrollY,
     });
   };
 
   const handleSave = async () => {
-    if (!page1Ref.current || !page2Ref.current) return;
+    if (!pdfPage1Ref.current || !pdfPage2Ref.current) return;
+
     setIsExporting(true);
-    window.scrollTo(0, 0);
+    // ✅ 상태 반영/레이아웃 안정화 후 캡처
+    await new Promise((r) => setTimeout(r, 0));
 
     try {
-      // 1) 1페이지 / 2페이지 캡처를 각각 수행
-      const canvas1 = await capture(page1Ref.current);
-      const canvas2 = await capture(page2Ref.current);
+      const canvas1 = await capture(pdfPage1Ref.current);
+      const canvas2 = await capture(pdfPage2Ref.current);
 
       const img1 = canvas1.toDataURL('image/png');
       const img2 = canvas2.toDataURL('image/png');
@@ -94,32 +102,26 @@ const Report: React.FC<ReportProps> = ({ result }) => {
         pdf.rect(0, 0, pageWidth, pageHeight, 'F');
       };
 
-      // ---- PAGE 1: 차트 + 강점/보완점 (무조건 1페이지에) ----
+      // ---- PAGE 1: 무조건 1페이지에 맞춰 넣기 ----
       paintPageBgWhite();
 
       const img1Height = (canvas1.height * usableWidth) / canvas1.width;
-
-      // 1페이지는 “한 페이지에 맞도록” 축소해서 넣는 전략
-      // (내용이 많아서 1페이지를 넘기면 레이아웃 목표가 깨지므로, 여기서 자동 축소)
       const scale1 = Math.min(1, usableHeight / img1Height);
       const drawW1 = usableWidth * scale1;
       const drawH1 = img1Height * scale1;
 
-      // 가운데 정렬(좌우는 marginLeft 기준, 위는 marginTop 기준)
       pdf.addImage(img1, 'PNG', marginLeft, marginTop, drawW1, drawH1);
 
-      // ---- PAGE 2+: 심층 해석 (길면 3,4페이지로 자동 분할) ----
+      // ---- PAGE 2+: 심층 해석(길면 자동 분할) ----
       pdf.addPage();
       paintPageBgWhite();
 
       const img2Height = (canvas2.height * usableWidth) / canvas2.width;
       let heightLeft = img2Height;
 
-      // 첫 해석 페이지
       pdf.addImage(img2, 'PNG', marginLeft, marginTop, usableWidth, img2Height);
       heightLeft -= usableHeight;
 
-      // 이어지는 페이지들
       while (heightLeft > 0) {
         pdf.addPage();
         paintPageBgWhite();
@@ -139,72 +141,204 @@ const Report: React.FC<ReportProps> = ({ result }) => {
     }
   };
 
-  // ✅ breakInside: avoid (캡처 단계에서 “카드 단위 잘림” 완화)
+  // ✅ breakInside: avoid
   const avoidBreakStyle: React.CSSProperties = {
     breakInside: 'avoid',
     pageBreakInside: 'avoid',
   };
 
-  // ✅ A4 페이지 컨테이너 공통(웹 화면에서도 예쁘고, 캡처에 안정적)
-const a4PageStyle: React.CSSProperties = {
-  width: '210mm',
-  minHeight: '297mm',
-  padding: '18mm',
-  boxSizing: 'border-box',
-  background: '#ffffff',
-  overflow: 'visible', // ✅ 화면에서 잘림 방지
-};
-
+  // ✅ PDF(A4) 컨테이너 스타일 (이건 “숨겨진 PDF DOM”에서만 사용)
+  const pdfA4PageStyle: React.CSSProperties = {
+    width: '210mm',
+    minHeight: '297mm',
+    padding: '18mm',
+    boxSizing: 'border-box',
+    background: '#ffffff',
+    overflow: 'visible',
+  };
 
   return (
-    <div className="max-w-4xl mx-auto py-12 px-4 space-y-10 animate-fadeIn relative">
-      <div className="flex justify-end sticky top-24 z-20">
-        <button
-          onClick={handleSave}
-          disabled={isExporting}
-          className="bg-[#84a98c] text-white px-6 py-2 rounded-xl text-sm font-bold shadow-lg hover:bg-[#6b8e23] flex items-center gap-2 transition-all active:scale-95"
-        >
-          {isExporting ? (
-            <>
-              <i className="fas fa-circle-notch animate-spin"></i> 저장 중...
-            </>
-          ) : (
-            <>
-              <i className="fas fa-download"></i> PDF 리포트 저장
-            </>
-          )}
-        </button>
-      </div>
+    <>
+      {/* =========================
+          SCREEN VIEW (모바일/웹)
+          - mm 단위 사용 금지
+          - 반응형 레이아웃만
+         ========================= */}
+      <div className="max-w-4xl mx-auto py-10 md:py-12 px-4 space-y-10 animate-fadeIn relative">
+        {/* ✅ 모바일에서 sticky가 깨짐 유발 가능 → md 이상에서만 sticky */}
+        <div className="flex justify-end md:sticky md:top-24 z-20">
+          <button
+            onClick={handleSave}
+            disabled={isExporting}
+            className="bg-[#84a98c] text-white px-6 py-2 rounded-xl text-sm font-bold shadow-lg hover:bg-[#6b8e23] flex items-center gap-2 transition-all active:scale-95"
+          >
+            {isExporting ? (
+              <>
+                <i className="fas fa-circle-notch animate-spin"></i> 저장 중...
+              </>
+            ) : (
+              <>
+                <i className="fas fa-download"></i> PDF 리포트 저장
+              </>
+            )}
+          </button>
+        </div>
 
-      <div className="space-y-16">
-        {/* =========================
-            PDF PAGE 1 (캡처 대상)
-           ========================= */}
-        <div ref={page1Ref} className="mx-auto" style={a4PageStyle}>
-          <div className="space-y-12">
-<div className="text-center space-y-4" style={avoidBreakStyle}>
-  <h2 className="text-4xl font-bold text-[#292524]">성격 분석 리포트</h2>
-  <p className="text-[#78716c] font-light">
-    당신의 내면을 비추는 30가지 질문의 결과입니다.
-  </p>
-</div>
+        {/* 화면에서 보기 좋은 구성 */}
+        <div className="space-y-10">
+          <div className="text-center space-y-3">
+            <h2 className="text-3xl md:text-4xl font-bold text-[#292524]">성격 분석 리포트</h2>
+            <p className="text-[#78716c] font-light">
+              당신의 내면을 비추는 30가지 질문의 결과입니다.
+            </p>
 
-<div className="mt-4 text-sm text-[#44403c] leading-relaxed max-w-2xl mx-auto bg-[#f5f5f4] border border-[#e7e5e4] rounded-xl px-4 py-3">
-  단, 본 결과는 Big5 진단 문항 256개 중 일부 문항에 대한 응답을 기반으로 산출된 참고용 결과입니다. <br />
-  보다 타당하고 신뢰도 높은 정식 진단 결과를 원하실 경우, <br/>
-  PSI COMPASS 홈페이지를 통해 전문 진단을 문의해주시기 바랍니다.
-</div>
+            {/* ✅ 추가 멘트(화면에도 보이게) */}
+            <div className="mt-4 text-sm text-[#44403c] leading-relaxed max-w-2xl mx-auto bg-[#f5f5f4] border border-[#e7e5e4] rounded-xl px-4 py-3">
+              단, 본 결과는 Big5 진단 문항 256개 중 일부 문항에 대한 응답을 기반으로 산출된 참고용 결과입니다. <br />
+              보다 타당하고 신뢰도 높은 정식 진단 결과를 원하실 경우, <br />
+              PSI COMPASS 홈페이지를 통해 전문 진단을 문의해주시기 바랍니다.
+            </div>
+          </div>
 
+          {/* ✅ 모바일에서는 1열, md 이상에서 2열 */}
+          <div className="bg-white p-6 md:p-10 rounded-[2.5rem] md:rounded-[3.5rem] shadow-sm border border-[#f5f5f4] grid grid-cols-1 md:grid-cols-[1.2fr_0.9fr] gap-10 items-center">
+            <div className="h-[320px] md:h-[380px] w-full min-w-0 overflow-visible flex items-center justify-center">
+              <ResponsiveContainer width="100%" height="100%">
+                <RadarChart
+                  data={chartData}
+                  margin={{ top: 20, right: 40, bottom: 20, left: 40 }}
+                  outerRadius="82%"
+                >
+                  <PolarGrid stroke="#e7e5e4" />
+                  <PolarAngleAxis dataKey="subject" tick={renderCustomTick} />
+                  <PolarRadiusAxis domain={[0, 30]} tick={false} axisLine={false} />
+                  <Radar dataKey="A" stroke="#84a98c" fill="#84a98c" fillOpacity={0.4} />
+                </RadarChart>
+              </ResponsiveContainer>
             </div>
 
-            {/* 요인별 점수 및 차트 */}
+            <div className="space-y-5 min-w-0 relative">
+              {chartData.map((item) => (
+                <div key={item.subject} className="space-y-1">
+                  <div className="flex justify-between text-xs font-bold">
+                    <span>{item.subject}</span>
+                    <span>{item.A} / 30</span>
+                  </div>
+                  <div className="h-2 w-full bg-stone-100 rounded-full overflow-hidden">
+                    <div className="h-full bg-[#84a98c]" style={{ width: `${(item.A / 30) * 100}%` }} />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="bg-[#f0f3f0] p-8 md:p-10 rounded-[2.5rem] md:rounded-[3rem] space-y-6">
+              <h4 className="font-bold text-[#425a46] flex items-center gap-2">
+                <i className="fas fa-star text-amber-500"></i> 주요 강점
+              </h4>
+              <ul className="space-y-4">
+                {result.strengths.map((s, i) => (
+                  <li key={i} className="text-sm flex gap-3 text-[#57534e]">
+                    <span className="text-[#84a98c] font-bold">{i + 1}.</span> {s}
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div className="bg-[#fff7ed] p-8 md:p-10 rounded-[2.5rem] md:rounded-[3rem] space-y-6">
+              <h4 className="font-bold text-[#9a3412] flex items-center gap-2">
+                <i className="fas fa-compass text-orange-400"></i> 보완 필요점
+              </h4>
+              <ul className="space-y-4">
+                {result.weaknesses.map((w, i) => (
+                  <li key={i} className="text-sm flex gap-3 text-[#57534e]">
+                    <span className="text-orange-400 font-bold">{i + 1}.</span> {w}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+
+          {/* 화면에서도 심층해석은 보여주되, PDF는 2페이지에 별도 */}
+          <div className="bg-white p-8 md:p-12 rounded-[2.5rem] md:rounded-[3.5rem] shadow-sm border border-[#f5f5f4] space-y-6">
+            <h3 className="text-xl md:text-2xl font-bold flex items-center gap-2">
+              <i className="fas fa-file-alt text-[#84a98c]"></i> 심층 해석
+            </h3>
+            <p className="text-[#57534e] leading-relaxed whitespace-pre-line text-base md:text-lg font-light">
+              {result.interpretation}
+            </p>
+          </div>
+
+          {/* (PDF 제외) 4주 케어 플랜 */}
+          <div className="bg-[#44403c] text-white p-10 md:p-12 rounded-[3rem] md:rounded-[4rem] space-y-8 shadow-sm">
+            <div className="space-y-2">
+              <h3 className="text-2xl font-bold">나를 위한 4주 케어 플랜</h3>
+              <p className="text-stone-400 font-light text-sm">진단 결과에 기반하여 설계된 주간별 성장 목표입니다.</p>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {result.weeklyPlans.map((wp, i) => (
+                <div key={i} className="bg-white/5 p-6 rounded-3xl border border-white/10">
+                  <div className="text-[#84a98c] text-[10px] font-bold mb-1 uppercase tracking-widest">
+                    WEEK {i + 1}
+                  </div>
+                  <div className="font-bold text-sm mb-2">{wp.title}</div>
+                  <div className="text-xs text-stone-400 line-clamp-2">7일간의 맞춤형 데일리 미션 포함</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* =========================
+          PDF VIEW (A4 전용, 화면 밖 숨김)
+          - 여기만 mm 사용
+          - 여기만 page1/page2 ref 적용
+         ========================= */}
+      <div
+        style={{
+          position: 'fixed',
+          left: '-99999px',
+          top: 0,
+          width: '210mm',
+          background: '#ffffff',
+          // 일부 브라우저에서 숨김 처리시 캡처 누락 방지:
+          opacity: 1,
+          pointerEvents: 'none',
+        }}
+        aria-hidden
+      >
+        {/* PDF PAGE 1 */}
+        <div ref={pdfPage1Ref} style={pdfA4PageStyle}>
+          <div className="space-y-12">
+            <div className="text-center space-y-4" style={avoidBreakStyle}>
+              <h2 className="text-4xl font-bold text-[#292524]">성격 분석 리포트</h2>
+              <p className="text-[#78716c] font-light">
+                당신의 내면을 비추는 30가지 질문의 결과입니다.
+              </p>
+            </div>
+
+            <div
+              className="mt-4 text-sm text-[#44403c] leading-relaxed max-w-2xl mx-auto bg-[#f5f5f4] border border-[#e7e5e4] rounded-xl px-4 py-3"
+              style={avoidBreakStyle}
+            >
+              단, 본 결과는 Big5 진단 문항 256개 중 일부 문항에 대한 응답을 기반으로 산출된 참고용 결과입니다. <br />
+              보다 타당하고 신뢰도 높은 정식 진단 결과를 원하실 경우, <br />
+              PSI COMPASS 홈페이지를 통해 전문 진단을 문의해주시기 바랍니다.
+            </div>
+
             <div
               className="bg-white p-10 rounded-[3.5rem] shadow-sm border border-[#f5f5f4] grid grid-cols-[1.2fr_0.9fr] gap-12 items-center"
               style={avoidBreakStyle}
             >
               <div className="h-[380px] w-full min-w-0 overflow-visible flex items-center justify-center">
                 <ResponsiveContainer width="100%" height="100%">
-                  <RadarChart data={chartData} margin={{top: 20, right: 40, bottom: 20, left: 40}} outerRadius="82%">
+                  <RadarChart
+                    data={chartData}
+                    margin={{ top: 20, right: 40, bottom: 20, left: 40 }}
+                    outerRadius="82%"
+                  >
                     <PolarGrid stroke="#e7e5e4" />
                     <PolarAngleAxis dataKey="subject" tick={renderCustomTick} />
                     <PolarRadiusAxis domain={[0, 30]} tick={false} axisLine={false} />
@@ -228,8 +362,7 @@ const a4PageStyle: React.CSSProperties = {
               </div>
             </div>
 
-            {/* 강점 및 보완점 */}
-            <div className="grid md:grid-cols-2 gap-8" style={avoidBreakStyle}>
+            <div className="grid grid-cols-2 gap-8" style={avoidBreakStyle}>
               <div className="bg-[#f0f3f0] p-10 rounded-[3rem] space-y-6" style={avoidBreakStyle}>
                 <h4 className="font-bold text-[#425a46] flex items-center gap-2">
                   <i className="fas fa-star text-amber-500"></i> 주요 강점
@@ -259,10 +392,8 @@ const a4PageStyle: React.CSSProperties = {
           </div>
         </div>
 
-        {/* =========================
-            PDF PAGE 2+ (캡처 대상)
-           ========================= */}
-        <div ref={page2Ref} className="mx-auto" style={a4PageStyle}>
+        {/* PDF PAGE 2+ */}
+        <div ref={pdfPage2Ref} style={pdfA4PageStyle}>
           <div
             className="bg-white p-12 rounded-[3.5rem] shadow-sm border border-[#f5f5f4] space-y-8"
             style={avoidBreakStyle}
@@ -275,27 +406,8 @@ const a4PageStyle: React.CSSProperties = {
             </p>
           </div>
         </div>
-
-        {/* (PDF 제외) 4주 케어 플랜 */}
-        <div className="bg-[#44403c] text-white p-12 rounded-[4rem] space-y-8 shadow-sm">
-          <div className="space-y-2">
-            <h3 className="text-2xl font-bold">나를 위한 4주 케어 플랜</h3>
-            <p className="text-stone-400 font-light text-sm">진단 결과에 기반하여 설계된 주간별 성장 목표입니다.</p>
-          </div>
-          <div className="grid md:grid-cols-2 gap-4">
-            {result.weeklyPlans.map((wp, i) => (
-              <div key={i} className="bg-white/5 p-6 rounded-3xl border border-white/10">
-                <div className="text-[#84a98c] text-[10px] font-bold mb-1 uppercase tracking-widest">
-                  WEEK {i + 1}
-                </div>
-                <div className="font-bold text-sm mb-2">{wp.title}</div>
-                <div className="text-xs text-stone-400 line-clamp-2">7일간의 맞춤형 데일리 미션 포함</div>
-              </div>
-            ))}
-          </div>
-        </div>
       </div>
-    </div>
+    </>
   );
 };
 
