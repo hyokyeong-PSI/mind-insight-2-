@@ -73,7 +73,7 @@ const App: React.FC = () => {
             </a>
           </div>
           <p className="text-xs font-light">본 서비스는 별도의 데이터를 저장하지 않는 일회성 심리 진단 도구입니다.</p>
-          <p className="text-xs font-light">© 2024 PSI COMPASS. All rights reserved.</p>
+          <p className="text-xs font-light">© 2023 PSI COMPASS. All rights reserved.</p>
         </div>
       </footer>
     </div>
