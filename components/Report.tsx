@@ -164,7 +164,14 @@ const Report: React.FC<ReportProps> = ({ result }) => {
           - mm 단위 사용 금지
           - 반응형 레이아웃만
          ========================= */}
-      <div className="max-w-4xl mx-auto py-10 md:py-12 px-4 space-y-10 animate-fadeIn relative">
+<div
+  className="max-w-4xl mx-auto px-4 pt-16 pb-24 md:py-12 space-y-10 animate-fadeIn relative"
+  style={{
+    paddingTop: 'calc(4rem + env(safe-area-inset-top))',
+    paddingBottom: 'calc(6rem + env(safe-area-inset-bottom))',
+  }}
+>
+
         {/* ✅ 모바일에서 sticky가 깨짐 유발 가능 → md 이상에서만 sticky */}
         <div className="flex justify-end md:sticky md:top-24 z-20">
           <button
